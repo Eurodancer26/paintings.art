@@ -1913,7 +1913,8 @@ window.addEventListener('DOMContentLoaded', function () {
   'use strict';
 
   Object(_modules_modals__WEBPACK_IMPORTED_MODULE_0__["default"])();
-  Object(_modules_sliders__WEBPACK_IMPORTED_MODULE_1__["default"])();
+  Object(_modules_sliders__WEBPACK_IMPORTED_MODULE_1__["default"])('.feedback-slider-item', 'horizontal', '.main-prev-btn', '.main-next-btn', true, 3000);
+  Object(_modules_sliders__WEBPACK_IMPORTED_MODULE_1__["default"])('.main-slider-item', 'vertical', true, 3000);
 });
 
 /***/ }),
@@ -2060,10 +2061,11 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var sliders = function sliders(slides, direction, previos, next) {
+  var paused = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : false;
+  var time = arguments.length > 5 ? arguments[5] : undefined;
   var slideIndex = 1; //самый первый слайд
-  var items = document.querySelectorAll(slides),
-    prevBtn = document.querySelector(previos),
-    nextBtn = document.querySelector(next);
+
+  var items = document.querySelectorAll(slides);
   function showSlides(n) {
     if (n > items.length) {
       slideIndex = 1;
@@ -2072,12 +2074,54 @@ var sliders = function sliders(slides, direction, previos, next) {
       slideIndex = items.length;
     }
     items.forEach(function (item) {
-      item.classList("animated");
+      item.classList.add("animated");
       item.style.display = 'none';
     });
-    items[slideIndex - 1].style.display = 'block';
+    items[slideIndex - 1].style.display = 'block'; // items[slideIndex - 1] --> текущий слайд
   }
-  showSlides(slideIndex);
+
+  showSlides(slideIndex); //инициализация 
+
+  function plusSlides(n) {
+    //вперёд и назад +1 или -1
+    showSlides(slideIndex += n);
+  }
+  try {
+    //если селекторы кнопок не были переданны, то этот блок кода не сработает и не сломает всю остальную логику в скриптах 
+    var prevBtn = document.querySelector(previos),
+      nextBtn = document.querySelector(next);
+    prevBtn.addEventListener('click', function () {
+      plusSlides(-1);
+      items[slideIndex - 1].classList.remove('slideInLeft');
+      items[slideIndex - 1].classList.add('slideInRight');
+    });
+    nextBtn.addEventListener('click', function () {
+      plusSlides(1);
+      items[slideIndex - 1].classList.remove('slideInRight');
+      items[slideIndex - 1].classList.add('slideInLeft');
+    });
+  } catch (e) {}
+  function activateAnimation(time) {
+    if (direction === 'vertical') {
+      paused = setInterval(function () {
+        plusSlides(1);
+        items[slideIndex - 1].classList.add('slideInDown');
+      }, time);
+    } else {
+      paused = setInterval(function () {
+        plusSlides(1);
+        items[slideIndex - 1].classList.remove('slideInRight');
+        items[slideIndex - 1].classList.add('slideInLeft');
+      }, time);
+    }
+  }
+  activateAnimation(time);
+  items[0].parentNode.addEventListener('mouseenter', function () {
+    clearInterval(paused);
+  });
+  items[0].parentNode.addEventListener('mouseleave', function () {
+    activateAnimation(time);
+  });
 };
 /* harmony default export */ __webpack_exports__["default"] = (sliders);
 
