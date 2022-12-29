@@ -1,6 +1,6 @@
-const sliders = (slides, direction, previos, next, paused = false, time) => {
-    let slideIndex = 1; //самый первый слайд
-
+const sliders = (slides, direction, previos, next) => {
+    let slideIndex = 1, //самый первый слайд
+        paused = false;
 
     const items = document.querySelectorAll(slides);
 
@@ -60,13 +60,13 @@ const sliders = (slides, direction, previos, next, paused = false, time) => {
         }
     }
 
-    activateAnimation(time);
+    activateAnimation(3000);
 
     items[0].parentNode.addEventListener('mouseenter', () => {
         clearInterval(paused);
     });
     items[0].parentNode.addEventListener('mouseleave', () => {
-        activateAnimation(time);
+        activateAnimation(3000);
     });
 };
 
