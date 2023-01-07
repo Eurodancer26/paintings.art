@@ -1,21 +1,22 @@
 const mask = (selector) => {
-
     let setCursorPosition =(position, element) => {
         element.focus();
 
         if (element.setSelectionRange) {
-            element.setSelectionRange(position, position);
+            element.setSelectionRange(position, position, 'forward');
         } else if (element.createTextRange) {
-            let range = element.createTextRange();
+            let range = element.value.createTextRange();
 
-            range.collapse(true);
-            range.moveEnd('character', position);
-            range.moveStart('character', position);
+            range.collapse(false);
+            range.selectionStart('character', position);
+            range.selectionEnd('character', position);
+            range.selectionDirection('forward');
             range.select();
         }
     };
 
     function createMask(event) {
+
         let matrix = '+7 (___) ___ __ __',
             i = 0,
             def = matrix.replace(/\D/g, ''), //статичное, работает на основе матрицы
@@ -28,6 +29,7 @@ const mask = (selector) => {
         this.value = matrix.replace(/./g, (a) => {
             return /[_\d]/.test(a) && i < val.length ? val.charAt(i++) : i >= val.length ? '' : a;
         });
+        console.log(this.value.length);
 
         if (event.type === 'blur') {
             if (this.value.length == 2) {
@@ -44,7 +46,6 @@ const mask = (selector) => {
         input.addEventListener('input', createMask);
         input.addEventListener('focus', createMask);
         input.addEventListener('blur', createMask);
-
     });
 };
 
