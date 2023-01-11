@@ -6293,8 +6293,6 @@ var accordion = function accordion(triggersSelector) {
   var btns = document.querySelectorAll(triggersSelector);
   btns.forEach(function (btn) {
     btn.addEventListener('click', function () {
-      console.log(this);
-      console.log(btn);
       this.classList.toggle('active-style');
       this.nextElementSibling.classList.toggle('active-content');
       if (!this.classList.contains('active')) {
