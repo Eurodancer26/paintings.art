@@ -1,3 +1,5 @@
+let state = {};
+
 const calc = (size, material, options, promocode, result) => {
     const sizeBlock = document.querySelector(size),
           materialBlock = document.querySelector(material),
@@ -16,6 +18,12 @@ const calc = (size, material, options, promocode, result) => {
             resultBlock.textContent = Math.round(sum * 0.7);
         } else {
             resultBlock.textContent = sum;
+
+            if (resultBlock.textContent == sum) {
+                
+                state.price = sum;
+                console.log(state);
+            }            
         }
     };
 
@@ -25,5 +33,5 @@ const calc = (size, material, options, promocode, result) => {
     promocodeBlock.addEventListener('input', calcFunc);
 };
 
-
+export {state};
 export default calc;

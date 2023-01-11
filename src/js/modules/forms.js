@@ -1,11 +1,12 @@
 // import checkNumInputs from './checkNumInputs';
 // import {closeModal} from './modals';
 import { postData } from "../services/requests";
-
+import {state} from './calc';
 
 const forms = () => {
     const form = document.querySelectorAll('form'),
           inputs = document.querySelectorAll('input'),
+          textArea = document.querySelector('textarea'),
           upload = document.querySelectorAll('[name="upload"]');
 
     // checkNumInputs('input[name="user_phone"]');
@@ -28,6 +29,7 @@ const forms = () => {
         inputs.forEach(input => {
             input.value = '';
         });
+        textArea.value = '';
         upload.forEach(item => {
             item.previousElementSibling.textContent = 'Файл не выбран';
         });
@@ -68,9 +70,10 @@ const forms = () => {
             statusMessage.appendChild(textMessage);
 
             const formData = new FormData(item);
+            formData.append('price', state.price);
             let api;
-            item.closest('.popup-design')  || item.classList.contains('calc-form') ? api = path.designer : api = path.question;
-            console.log(api);
+            item.closest('.popup-design')  || item.classList.contains('calc-form')  ? api = path.designer : api = path.question;
+            
 
             postData(api, formData)
                 .then(res => {
